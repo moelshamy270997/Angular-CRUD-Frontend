@@ -1,0 +1,142 @@
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <div class="container-fluid">
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item active">
+          <a class="nav-link" (click)="onOpenModal(null, 'add')">Add Person </a>
+        </li>
+
+      </ul>
+      <form class="d-flex">
+        <input (ngModelChange)="searchPerson(search.value)" ngModel #search="ngModel"
+               [ngModelOptions]="{standalone: true}"
+               class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+      </form>
+    </div>
+  </div>
+</nav>
+
+<section id="main">
+  <div class="container">
+
+    <div *ngFor="let person of persons" class="person">
+      <h3>{{person?.firstName}} {{person?.lastName}}</h3>
+      <p>{{person?.email}}</p>
+
+      <div class="btns">
+        <button type="button" class="btn btn-primary" (click)="onOpenModal(person, 'edit')">edit</button>
+        <button type="button" class="btn btn-danger" (click)="onOpenModal(person, 'delete')">delete</button>
+      </div>
+
+    </div>
+
+  </div>
+</section>
+
+<!-- Add Modal -->
+<div class="modal fade" id="addPerson" tabindex="-1" aria-labelledby="addPersonModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="addPersonModalLabel">Add new Person</h5>
+        <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form #addForm="ngForm" (ngSubmit)="onAddPerson(addForm)">
+          <div class="form-group">
+            <label for="firstName">First Name</label>
+            <input type="text" ngModel name="firstName" class="form-control" id="firstName" placeholder="First Name" required>
+          </div>
+          <div class="form-group">
+            <label for="lastName">Last Name</label>
+            <input type="text" ngModel name="lastName" class="form-control" id="lastName" placeholder="Last Name" required>
+          </div>
+          <div class="form-group">
+            <label for="email">Email Address</label>
+            <input type="email" ngModel name="email" class="form-control" id="email" placeholder="Email" required>
+          </div>
+
+          <div class="modal-footer">
+            <button type="button" id="close-add-person-form" data-dismiss="modal" class="btn btn-secondary">Close</button>
+            <button [disabled]="addForm.invalid" type="submit" class="btn btn-primary" >Save changes</button>
+          </div>
+        </form>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+
+<!-- Update Modal -->
+<div class="modal fade" id="updatePerson" tabindex="-1" aria-labelledby="updatePersonModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="updatePersonModalLabel">Update Person</h5>
+        <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form #updateForm="ngForm">
+
+          <input type="hidden" ngModel="{{updatePerson?.id}}" name="id" id="id">
+
+          <div class="form-group">
+            <label for="firstName">First Name</label>
+            <input type="text" ngModel="{{updatePerson?.firstName}}" name="firstName" id="firstName" placeholder="First Name" class="form-control" required>
+          </div>
+          <div class="form-group">
+            <label for="lastName">Last Name</label>
+            <input type="text" ngModel="{{updatePerson?.lastName}}" name="lastName" id="lastName" placeholder="Last Name" class="form-control" required>
+          </div>
+          <div class="form-group">
+            <label for="email">Email Address</label>
+            <input type="email" ngModel="{{updatePerson?.email}}" name="email" id="email" placeholder="Email" class="form-control" required>
+          </div>
+
+          <div class="modal-footer">
+            <button type="button" data-dismiss="modal" class="btn btn-secondary">Close</button>
+            <button (click)="onUpdatePerson(updateForm.value)" type="submit" data-dismiss="modal" class="btn btn-primary" >Save changes</button>
+          </div>
+        </form>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+
+<!-- Delete Modal -->
+<div class="modal fade" id="deletePerson" tabindex="-1" role="dialog" aria-labelledby="deletePersonModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="deletePersonModalLabel">Delete Employee</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p>Are you sure you want to delete employee {{deletePerson?.firstName}} {{deletePerson?.lastName}}?</p>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+          <button (click)="onDeletePerson(deletePerson?.id)" class="btn btn-danger" data-dismiss="modal">Yes</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- Notification for no Persons -->
+<div *ngIf="persons?.length == 0" class="col-lg-12 col-md-12 col-xl-12">
+  <div class="alert alert-info" role="alert">
+    <h4 class="alert-heading">NO Persons!</h4>
+    <p>No Persons were found.</p>
+  </div>
+</div>
+
